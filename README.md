@@ -1,4 +1,4 @@
-# Infrastructure
+# Operations
 
 ## Why this project
 The Secure Data Commons (SDC) will provide a secure data science platform that enables collaborative research involving moderately sensitive data and create an outstanding climate of support for traffic engineers, researchers, and data scientists. This repository contains the SDC's operational resources that are used to support data providers and research teams.
