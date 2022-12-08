@@ -1,20 +1,26 @@
 locals {
-  // Setup some local vars to hold static and dynamic data
-  common = {
-    account_id  = nonsensitive(data.aws_ssm_parameter.account_id.value)
-    region      = nonsensitive(data.aws_ssm_parameter.region.value)
-    environment = nonsensitive(data.aws_ssm_parameter.environment.value)
-    network = {
-      vpc                    = data.aws_vpc.public
-      subnets                = data.aws_subnets.public
-      default_security_group = data.aws_security_group.default
-    }
-    support_email    = nonsensitive(data.aws_ssm_parameter.support_email.value)
-    terraform_bucket = "${nonsensitive(data.aws_ssm_parameter.environment.value)}.sdc.dot.gov.platform.terraform"
-  }
-  default_tags = {
-    repository_url = "https://github.com/USDOT-SDC/"
-    repository     = "infrastructure"
-  }
-  provider-profile = "sdc"
+  common = merge(
+    yamldecode(file("../../operations-secrets/common.yaml")),
+    yamldecode(file("../../operations-secrets/common-${nonsensitive(data.aws_ssm_parameter.environment.value)}.yaml")),
+    {
+      environment = nonsensitive(data.aws_ssm_parameter.environment.value)
+      network = {
+        vpc                    = data.aws_vpc.default
+        security_group_default = data.aws_security_group.default
+        subnet_support         = data.aws_subnet.support
+        subnet_researcher      = data.aws_subnet.researcher
+        subnet_infra_3         = data.aws_subnet.infrastructure_3
+        subnet_infra_4         = data.aws_subnet.infrastructure_4
+        subnet_infra_5         = data.aws_subnet.infrastructure_5
+        subnet_infra_6         = data.aws_subnet.infrastructure_6
+        subnet_infra_ids = [
+          data.aws_subnet.infrastructure_3.id,
+          data.aws_subnet.infrastructure_4.id,
+          data.aws_subnet.infrastructure_5.id,
+          data.aws_subnet.infrastructure_6.id,
+        ]
+      }
+
+    },
+  )
 }
