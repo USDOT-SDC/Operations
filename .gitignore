@@ -1,6 +1,5 @@
 ### repo specific ignores ###
-# Lock files
-**/terraform/**/.terraform.lock.hcl
+
 
 # Keep the example file
 !example.auto.tfvars
